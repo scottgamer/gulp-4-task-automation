@@ -8,3 +8,9 @@ Install the gulp dependency
 
 Check gulp version
 `gulp -v`
+
+All tasks in gulp are asynchronous
+Every task must signal gulp when they are done
+
+- using the `done()` callback
+- using the `return` statement
