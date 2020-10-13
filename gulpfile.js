@@ -1,15 +1,23 @@
-const { task, src } = require("gulp");
+const gulp = require("gulp");
+const sass = require("gulp-sass");
 
-task("hello", (done) => {
+gulp.task("hello", (done) => {
   console.log("hello gulp!");
   done();
 });
 
-task("task-1", (done) => {
+gulp.task("task-1", (done) => {
   console.log("task 1 completed");
   done();
 });
 
-task("task-2", () => {
+gulp.task("task-2", () => {
   return src("./digits.txt");
+});
+
+gulp.task("sass", () => {
+  return gulp
+    .src("./src/sass/main.scss")
+    .pipe(sass())
+    .pipe(gulp.dest("./dist/css"));
 });
