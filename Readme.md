@@ -14,3 +14,9 @@ Every task must signal gulp when they are done
 
 - using the `done()` callback
 - using the `return` statement
+
+File wildcards
+
+- \*.scss - match all files at the end of the path
+- \*_*/*_.scss - match all files at the end of the path plus all children files and folder
+- !_.scss or !\*\*/_.scss - exclude matching expression
