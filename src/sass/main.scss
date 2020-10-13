@@ -1,7 +1,12 @@
-.card {
-  background-color: orange;
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
 
-  &__item {
-    font-size: 2rem;
-  }
+.title {
+  font-size: 50px;
+  color: brown;
+  text-transform: uppercase;
 }
