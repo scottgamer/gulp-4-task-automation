@@ -35,6 +35,6 @@ gulp.task("watch", () => {
   });
 
   gulp
-    .watch("./src/sass/**/*.scss", gulp.series(["sass"]))
+    .watch(["./src/sass/**/*.scss", "**/*.html"], gulp.series(["sass"]))
     .on("change", browserSync.reload);
 });
