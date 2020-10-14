@@ -2,6 +2,7 @@ const gulp = require("gulp");
 const sass = require("gulp-sass");
 const sourcemaps = require("gulp-sourcemaps");
 const browserSync = require("browser-sync").create();
+const cssNano = require("gulp-cssnano");
 
 gulp.task("hello", (done) => {
   console.log("hello gulp!");
@@ -22,6 +23,7 @@ gulp.task("sass", () => {
     .src(["./src/sass/**/*.scss", "!./src/sass/widget.scss"])
     .pipe(sourcemaps.init())
     .pipe(sass())
+    .pipe(cssNano())
     .pipe(sourcemaps.write("."))
     .pipe(gulp.dest("./dist/css"));
 });
