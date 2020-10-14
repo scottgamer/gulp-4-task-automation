@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/scottgamer/gulp-4-task-automation#readme",
   "devDependencies": {
+    "browser-sync": "^2.26.12",
     "gulp": "^4.0.2",
     "gulp-sass": "^4.1.0",
     "gulp-sourcemaps": "^2.6.5",
