@@ -1,6 +1,7 @@
 const gulp = require("gulp");
 const sass = require("gulp-sass");
 const sourcemaps = require("gulp-sourcemaps");
+const browserSync = require("browser-sync").create();
 
 gulp.task("hello", (done) => {
   console.log("hello gulp!");
@@ -23,4 +24,17 @@ gulp.task("sass", () => {
     .pipe(sass())
     .pipe(sourcemaps.write("."))
     .pipe(gulp.dest("./dist/css"));
+});
+
+gulp.task("watch", () => {
+  browserSync.init({
+    server: {
+      baseDir: "./",
+    },
+    browser: ["chrome", "firefox"],
+  });
+
+  gulp
+    .watch("./src/sass/**/*.scss", gulp.series(["sass"]))
+    .on("change", browserSync.reload);
 });
