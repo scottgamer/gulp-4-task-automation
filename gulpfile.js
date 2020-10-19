@@ -4,6 +4,7 @@ const sourcemaps = require("gulp-sourcemaps");
 const browserSync = require("browser-sync").create();
 const cssNano = require("gulp-cssnano");
 const uglify = require("gulp-uglify");
+const rename = require("gulp-rename");
 
 gulp.task("hello", (done) => {
   console.log("hello gulp!");
@@ -26,6 +27,13 @@ gulp.task("sass", () => {
     .pipe(sass())
     .pipe(cssNano())
     .pipe(sourcemaps.write("."))
+    .pipe(
+      rename((path) => {
+        if (!path.extname.endsWith(".map")) {
+          path.basename += ".min";
+        }
+      })
+    )
     .pipe(gulp.dest("./dist/css"));
 });
 
@@ -33,6 +41,11 @@ gulp.task("javascript", () => {
   return gulp
     .src(["./src/js/**/*.js"])
     .pipe(uglify())
+    .pipe(
+      rename({
+        suffix: ".min",
+      })
+    )
     .pipe(gulp.dest("./dist/js"));
 });
 
