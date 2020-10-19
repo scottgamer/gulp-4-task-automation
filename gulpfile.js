@@ -6,6 +6,7 @@ const cssNano = require("gulp-cssnano");
 const uglify = require("gulp-uglify");
 const rename = require("gulp-rename");
 const concat = require("gulp-concat");
+const imagemin = require("gulp-imagemin");
 
 gulp.task("hello", (done) => {
   console.log("hello gulp!");
@@ -51,6 +52,14 @@ gulp.task("javascript", () => {
     .pipe(gulp.dest("./dist/js"));
 });
 
+// Image Optimization
+gulp.task("imagemin", () => {
+  return gulp
+    .src(["./src/img/**/*.+(png|jpg|gif|svg)"])
+    .pipe(imagemin())
+    .pipe(gulp.dest("./dist/img/"));
+});
+
 gulp.task("watch", () => {
   browserSync.init({
     server: {
@@ -61,8 +70,13 @@ gulp.task("watch", () => {
 
   gulp
     .watch(
-      ["./src/sass/**/*.scss", "**/*.html", "./src/js/**/*.js"],
-      gulp.series(["sass", "javascript"])
+      [
+        "./src/sass/**/*.scss",
+        "**/*.html",
+        "./src/js/**/*.js",
+        "./src/img/**/*.+(png|jpg|gif|svg)",
+      ],
+      gulp.series(["sass", "javascript", "imagemin"])
     )
     .on("change", browserSync.reload);
 });
