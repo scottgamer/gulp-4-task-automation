@@ -5,6 +5,7 @@ const browserSync = require("browser-sync").create();
 const cssNano = require("gulp-cssnano");
 const uglify = require("gulp-uglify");
 const rename = require("gulp-rename");
+const concat = require("gulp-concat");
 
 gulp.task("hello", (done) => {
   console.log("hello gulp!");
@@ -40,6 +41,7 @@ gulp.task("sass", () => {
 gulp.task("javascript", () => {
   return gulp
     .src(["./src/js/**/*.js"])
+    .pipe(concat("project.js"))
     .pipe(uglify())
     .pipe(
       rename({
