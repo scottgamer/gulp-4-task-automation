@@ -85,3 +85,7 @@ gulp.task("watch", () => {
 gulp.task("clear-cache", (done) => {
   return cache.clearAll(done);
 });
+
+// Gulp default command
+
+gulp.task("default", gulp.series(["watch"]));
