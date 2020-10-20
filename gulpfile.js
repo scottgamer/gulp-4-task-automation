@@ -7,6 +7,7 @@ const uglify = require("gulp-uglify");
 const rename = require("gulp-rename");
 const concat = require("gulp-concat");
 const imagemin = require("gulp-imagemin");
+const cache = require("gulp-cache");
 
 gulp.task("hello", (done) => {
   console.log("hello gulp!");
@@ -56,7 +57,7 @@ gulp.task("javascript", () => {
 gulp.task("imagemin", () => {
   return gulp
     .src(["./src/img/**/*.+(png|jpg|gif|svg)"])
-    .pipe(imagemin())
+    .pipe(cache(imagemin()))
     .pipe(gulp.dest("./dist/img/"));
 });
 
@@ -79,4 +80,8 @@ gulp.task("watch", () => {
       gulp.series(["sass", "javascript", "imagemin"])
     )
     .on("change", browserSync.reload);
+});
+
+gulp.task("clear-cache", (done) => {
+  return cache.clearAll(done);
 });
