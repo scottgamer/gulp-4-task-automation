@@ -8,6 +8,7 @@ const rename = require("gulp-rename");
 const concat = require("gulp-concat");
 const imagemin = require("gulp-imagemin");
 const cache = require("gulp-cache");
+const autoprefixer = require("gulp-autoprefixer");
 
 gulp.task("hello", (done) => {
   console.log("hello gulp!");
@@ -27,6 +28,7 @@ gulp.task("sass", () => {
   return gulp
     .src(["./src/sass/**/*.scss", "!./src/sass/widget.scss"])
     .pipe(sourcemaps.init())
+    .pipe(autoprefixer())
     .pipe(sass())
     .pipe(cssNano())
     .pipe(sourcemaps.write("."))
