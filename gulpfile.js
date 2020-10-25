@@ -12,6 +12,18 @@ const autoprefixer = require("gulp-autoprefixer");
 const babel = require("gulp-babel");
 const zip = require("gulp-zip");
 const del = require("del");
+const plumber = require("gulp-plumber");
+// const notify = require("gulp-notify");
+
+// notify.defaults({
+//   messages: {
+//     sass: "CSS was successfully compiled",
+//     js: "Javascript is ready!",
+//   },
+//   prefix: "=====",
+//   suffix: "=====",
+//   exclusions: ".map",
+// });
 
 const filesPath = {
   sass: "./src/sass/**/*.scss",
@@ -36,48 +48,71 @@ gulp.task("task-2", () => {
 
 // Sass task
 gulp.task("sass", () => {
-  return gulp
-    .src([filesPath.sass, "!./src/sass/widget.scss"])
-    .pipe(sourcemaps.init())
-    .pipe(autoprefixer())
-    .pipe(sass())
-    .pipe(cssNano())
-    .pipe(sourcemaps.write("."))
-    .pipe(
-      rename((path) => {
-        if (!path.extname.endsWith(".map")) {
-          path.basename += ".min";
-        }
-      })
-    )
-    .pipe(gulp.dest("./dist/css"));
+  return (
+    gulp
+      .src([filesPath.sass, "!./src/sass/widget.scss"])
+      // .pipe(
+      //   plumber({
+      //     errorHandler: notify.error,
+      //   })
+      // )
+      .pipe(sourcemaps.init())
+      .pipe(autoprefixer())
+      .pipe(sass())
+      .pipe(cssNano())
+      .pipe(sourcemaps.write("."))
+      .pipe(
+        rename((path) => {
+          if (!path.extname.endsWith(".map")) {
+            path.basename += ".min";
+          }
+        })
+      )
+      .pipe(gulp.dest("./dist/css"))
+  );
+  // .pipe(notify.success("sass"));
 });
 
 // Javascript task
 gulp.task("javascript", () => {
-  return gulp
-    .src([filesPath.js])
-    .pipe(
-      babel({
-        presets: ["@babel/env"],
-      })
-    )
-    .pipe(concat("project.js"))
-    .pipe(uglify())
-    .pipe(
-      rename({
-        suffix: ".min",
-      })
-    )
-    .pipe(gulp.dest("./dist/js"));
+  return (
+    gulp
+      .src([filesPath.js])
+      // .pipe(
+      //   plumber({
+      //     errorHandler: notify.error,
+      //   })
+      // )
+      .pipe(
+        babel({
+          presets: ["@babel/env"],
+        })
+      )
+      .pipe(concat("project.js"))
+      .pipe(uglify())
+      .pipe(
+        rename({
+          suffix: ".min",
+        })
+      )
+      .pipe(gulp.dest("./dist/js"))
+  );
+  // .pipe(notify.success("js"));
 });
 
 // Image Optimization
 gulp.task("imagemin", () => {
-  return gulp
-    .src([filesPath.images])
-    .pipe(cache(imagemin()))
-    .pipe(gulp.dest("./dist/img/"));
+  return (
+    gulp
+      .src([filesPath.images])
+      // .pipe(
+      //   plumber({
+      //     errorHandler: notify.error,
+      //   })
+      // )
+      .pipe(cache(imagemin()))
+      .pipe(gulp.dest("./dist/img/"))
+  );
 });
 
 // Watch for changes
