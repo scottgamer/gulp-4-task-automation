@@ -17,9 +17,12 @@
   },
   "homepage": "https://github.com/scottgamer/gulp-4-task-automation#readme",
   "devDependencies": {
+    "@babel/core": "^7.12.3",
+    "@babel/preset-env": "^7.12.1",
     "browser-sync": "^2.26.12",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^7.0.1",
+    "gulp-babel": "^8.0.0",
     "gulp-cache": "^1.1.3",
     "gulp-concat": "^2.6.1",
     "gulp-cssnano": "^2.1.3",
