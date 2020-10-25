@@ -11,6 +11,7 @@ const cache = require("gulp-cache");
 const autoprefixer = require("gulp-autoprefixer");
 const babel = require("gulp-babel");
 const zip = require("gulp-zip");
+const del = require("del");
 
 const filesPath = {
   sass: "./src/sass/**/*.scss",
@@ -112,4 +113,9 @@ gulp.task("zip", () => {
     .src(["./**/*", "!./node_modules/**/*"])
     .pipe(zip("project.zip"))
     .pipe(gulp.dest("./"));
+});
+
+// Clean "dist" folder
+gulp.task("clean-dist", () => {
+  return del(["./dist/**/*"]);
 });
