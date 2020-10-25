@@ -10,6 +10,7 @@ const imagemin = require("gulp-imagemin");
 const cache = require("gulp-cache");
 const autoprefixer = require("gulp-autoprefixer");
 const babel = require("gulp-babel");
+const zip = require("gulp-zip");
 
 const filesPath = {
   sass: "./src/sass/**/*.scss",
@@ -104,3 +105,11 @@ gulp.task("serve", gulp.parallel(["sass", "javascript", "imagemin"]));
 
 // Gulp default command
 gulp.task("default", gulp.series(["serve", "watch"]));
+
+// Zip project
+gulp.task("zip", () => {
+  return gulp
+    .src(["./**/*", "!./node_modules/**/*"])
+    .pipe(zip("project.zip"))
+    .pipe(gulp.dest("./"));
+});
