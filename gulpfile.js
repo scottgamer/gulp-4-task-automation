@@ -11,6 +11,13 @@ const cache = require("gulp-cache");
 const autoprefixer = require("gulp-autoprefixer");
 const babel = require("gulp-babel");
 
+const filesPath = {
+  sass: "./src/sass/**/*.scss",
+  js: "./src/js/**/*.js",
+  images: "./src/img/**.+(png|jpg|gif|svg)",
+  html: "./html/**/*.kit",
+};
+
 gulp.task("hello", (done) => {
   console.log("hello gulp!");
   done();
@@ -25,9 +32,10 @@ gulp.task("task-2", () => {
   return src("./digits.txt");
 });
 
+// Sass task
 gulp.task("sass", () => {
   return gulp
-    .src(["./src/sass/**/*.scss", "!./src/sass/widget.scss"])
+    .src([filesPath.sass, "!./src/sass/widget.scss"])
     .pipe(sourcemaps.init())
     .pipe(autoprefixer())
     .pipe(sass())
@@ -43,9 +51,10 @@ gulp.task("sass", () => {
     .pipe(gulp.dest("./dist/css"));
 });
 
+// Javascript task
 gulp.task("javascript", () => {
   return gulp
-    .src(["./src/js/**/*.js"])
+    .src([filesPath.js])
     .pipe(
       babel({
         presets: ["@babel/env"],
@@ -64,11 +73,12 @@ gulp.task("javascript", () => {
 // Image Optimization
 gulp.task("imagemin", () => {
   return gulp
-    .src(["./src/img/**/*.+(png|jpg|gif|svg)"])
+    .src([filesPath.images])
     .pipe(cache(imagemin()))
     .pipe(gulp.dest("./dist/img/"));
 });
 
+// Watch for changes
 gulp.task("watch", () => {
   browserSync.init({
     server: {
@@ -79,13 +89,8 @@ gulp.task("watch", () => {
 
   gulp
     .watch(
-      [
-        "./src/sass/**/*.scss",
-        "**/*.html",
-        "./src/js/**/*.js",
-        "./src/img/**/*.+(png|jpg|gif|svg)",
-      ],
-      gulp.series(["sass", "javascript", "imagemin"])
+      [filesPath.sass, "**/*.html", filesPath.js, filesPath.images],
+      gulp.parallel(["sass", "javascript", "imagemin"])
     )
     .on("change", browserSync.reload);
 });
@@ -94,6 +99,8 @@ gulp.task("clear-cache", (done) => {
   return cache.clearAll(done);
 });
 
-// Gulp default command
+// Serve
+gulp.task("serve", gulp.parallel(["sass", "javascript", "imagemin"]));
 
-gulp.task("default", gulp.series(["watch"]));
+// Gulp default command
+gulp.task("default", gulp.series(["serve", "watch"]));
