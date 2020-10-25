@@ -9,6 +9,7 @@ const concat = require("gulp-concat");
 const imagemin = require("gulp-imagemin");
 const cache = require("gulp-cache");
 const autoprefixer = require("gulp-autoprefixer");
+const babel = require("gulp-babel");
 
 gulp.task("hello", (done) => {
   console.log("hello gulp!");
@@ -45,6 +46,11 @@ gulp.task("sass", () => {
 gulp.task("javascript", () => {
   return gulp
     .src(["./src/js/**/*.js"])
+    .pipe(
+      babel({
+        presets: ["@babel/env"],
+      })
+    )
     .pipe(concat("project.js"))
     .pipe(uglify())
     .pipe(
