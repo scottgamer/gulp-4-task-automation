@@ -1,4 +1,7 @@
 const gulp = require("gulp");
+
+const { dest, src, series, parallel, watch } = require("gulp");
+
 const sass = require("gulp-sass");
 const sourcemaps = require("gulp-sourcemaps");
 const browserSync = require("browser-sync").create();
@@ -47,10 +50,9 @@ gulp.task("task-2", () => {
 });
 
 // Sass task
-gulp.task("sass", () => {
+function sassTask() {
   return (
-    gulp
-      .src([filesPath.sass, "!./src/sass/widget.scss"])
+    src([filesPath.sass, "!./src/sass/widget.scss"])
       // .pipe(
       //   plumber({
       //     errorHandler: notify.error,
@@ -68,16 +70,15 @@ gulp.task("sass", () => {
           }
         })
       )
-      .pipe(gulp.dest("./dist/css"))
+      .pipe(dest("./dist/css"))
   );
   // .pipe(notify.success("sass"));
-});
+}
 
 // Javascript task
-gulp.task("javascript", () => {
+function jsTask() {
   return (
-    gulp
-      .src([filesPath.js])
+    src([filesPath.js])
       // .pipe(
       //   plumber({
       //     errorHandler: notify.error,
@@ -95,28 +96,27 @@ gulp.task("javascript", () => {
           suffix: ".min",
         })
       )
-      .pipe(gulp.dest("./dist/js"))
+      .pipe(dest("./dist/js"))
   );
   // .pipe(notify.success("js"));
-});
+}
 
 // Image Optimization
-gulp.task("imagemin", () => {
+function imagesTask() {
   return (
-    gulp
-      .src([filesPath.images])
+    src([filesPath.images])
       // .pipe(
       //   plumber({
       //     errorHandler: notify.error,
       //   })
       // )
       .pipe(cache(imagemin()))
-      .pipe(gulp.dest("./dist/img/"))
+      .pipe(dest("./dist/img/"))
   );
-});
+}
 
 // Watch for changes
-gulp.task("watch", () => {
+function watchTask() {
   browserSync.init({
     server: {
       baseDir: "./",
@@ -124,33 +124,46 @@ gulp.task("watch", () => {
     browser: ["chrome", "firefox"],
   });
 
-  gulp
-    .watch(
-      [filesPath.sass, "**/*.html", filesPath.js, filesPath.images],
-      gulp.parallel(["sass", "javascript", "imagemin"])
-    )
-    .on("change", browserSync.reload);
-});
+  watch(
+    [filesPath.sass, "**/*.html", filesPath.js, filesPath.images],
+    parallel(sassTask, jsTask, imagesTask)
+  ).on("change", browserSync.reload);
+}
 
-gulp.task("clear-cache", (done) => {
+// Clear cache
+function clearCache() {
   return cache.clearAll(done);
-});
+}
 
 // Serve
-gulp.task("serve", gulp.parallel(["sass", "javascript", "imagemin"]));
+// gulp.task("serve", gulp.parallel(["sass", "javascript", "imagemin"]));
 
 // Gulp default command
-gulp.task("default", gulp.series(["serve", "watch"]));
+// gulp.task("default", gulp.series(["serve", "watch"]));
 
 // Zip project
-gulp.task("zip", () => {
-  return gulp
-    .src(["./**/*", "!./node_modules/**/*"])
+function zipTask() {
+  return src(["./**/*", "!./node_modules/**/*"])
     .pipe(zip("project.zip"))
-    .pipe(gulp.dest("./"));
-});
+    .pipe(dest("./"));
+}
 
 // Clean "dist" folder
-gulp.task("clean-dist", () => {
+function clean() {
   return del(["./dist/**/*"]);
-});
+}
+
+// Gulp individual tasks
+module.exports.sassTask = sassTask;
+module.exports.jsTask = jsTask;
+module.exports.imagesTask = imagesTask;
+module.exports.watchTask = watchTask;
+module.exports.clearCache = clearCache;
+module.exports.zipTask = zipTask;
+module.exports.clean = clean;
+
+// Gulp Serve
+module.exports.build = parallel(sassTask, jsTask, imagesTask);
+
+// Gulp default
+module.exports.default = series(exports.build, watchTask);
